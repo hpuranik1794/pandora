@@ -1,15 +1,13 @@
-from app.db.crud import create_conversation, create_message, get_messages
+from app.db.crud import create_message, get_messages, create_conversation, get_conversations
 from fastapi import APIRouter, HTTPException, Request
 
 from app.services.llm_service import generate_response
 
 router = APIRouter(prefix="/chat", tags=["chat"])
 
-@router.post("/message")
-async def chat_response(request: Request):
+@router.post("/message/{conversation_id}")
+async def chat_response(conversation_id: int, request: Request):
   try:
-    conversation_id = await create_conversation()
-
     data = await request.json()
     user_input = data.get("user_input")
 
@@ -31,6 +29,27 @@ async def chat_history(conversation_id: int):
     messages = await get_messages(conversation_id)
 
     return {"messages": messages}
+  
+  except Exception as e:
+    raise HTTPException(status_code=500, detail=str(e))
+  
 
+@router.post("/conversations")
+async def create_new_conversation():
+  try:
+    conversation_id = await create_conversation()
+
+    return {"conversation_id": conversation_id}
+  
+  except Exception as e:
+    raise HTTPException(status_code=500, detail=str(e))
+  
+@router.get("/conversations")
+async def get_all_conversations():
+  try:
+    conversations = await get_conversations()
+
+    return conversations
+  
   except Exception as e:
     raise HTTPException(status_code=500, detail=str(e))
