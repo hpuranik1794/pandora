@@ -1,22 +1,30 @@
-import requests
+from openai import OpenAI
+from dotenv import load_dotenv
+from fastapi import FastAPI, HTTPException, Request
+import os
 
-url = "http://localhost:12434/engines/llama.cpp/v1/chat/completions"
+load_dotenv()
 
-data = {
-  "model": "ai/smollm2",
-  "messages": [
-    {
-      "role": "system",
-      "content": "You are a compassionate mental health assistant."
-    },
-    {
-      "role": "user",
-      "content": "I'm feeling really overwhelmed with everything going on in my life."
-    }
-  ]
-}
+client = OpenAI(base_url=os.getenv("BASE_URL"), api_key=os.getenv("API_KEY"))
 
-response = requests.post(url, json=data)
-response.raise_for_status()
+app = FastAPI()
 
-print(response.json()["choices"][0]["message"]["content"])
+
+@app.post("/chat")
+async def chat_response(request: Request):
+  try:
+    user_input = await request.json()
+    messages = [
+      {"role": "system", "content": "You are a compassionate mental health assistant."},
+      {"role": "user", "content": user_input["user_input"]}
+    ]
+
+    response = client.chat.completions.create(
+      model=os.getenv("MODEL_NAME"),
+      messages=messages
+    )
+
+    return {"response": response.choices[0].message.content}
+  
+  except Exception as e:
+    raise HTTPException(status_code=500, detail=str(e))
