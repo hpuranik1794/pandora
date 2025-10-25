@@ -9,7 +9,7 @@ client = OpenAI(base_url=os.getenv("BASE_URL"), api_key=os.getenv("API_KEY"))
 async def generate_response(user_input: str) -> str:
   messages = [
     {"role": "system", "content": "You are a compassionate mental health assistant."},
-    {"role": "user", "content": user_input["user_input"]}
+    {"role": "user", "content": user_input}
   ]
 
   response = client.chat.completions.create(
