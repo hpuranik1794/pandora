@@ -18,3 +18,6 @@ async def generate_response(user_input: str) -> str:
   )
 
   return response.choices[0].message.content
+
+async def generate_embedding(text: str) -> list:
+  pass  # Embedding generation not implemented yet

@@ -1,11 +1,17 @@
 from app.db.database import database
 from app.db.models import Message, Conversation
+from app.services.llm_service import generate_embedding
 
 async def create_message(conversation_id: int, sender: str, content: str):
+  embedding = None
+  if sender == "user":
+    embedding = await generate_embedding(content)
+    
   query = Message.__table__.insert().values(
     conversation_id=conversation_id,
     role=sender,
-    content=content
+    content=content,
+    embedding=embedding
   )
   message_id = await database.execute(query)
 

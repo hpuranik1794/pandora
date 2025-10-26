@@ -1,4 +1,4 @@
-from sqlalchemy import Table, Column, Integer, String, Text, DateTime, CheckConstraint, ForeignKey
+from sqlalchemy import Table, Column, Integer, String, Text, DateTime, CheckConstraint, ForeignKey, JSON
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.sql import func
 from app.db.database import metadata
@@ -12,6 +12,7 @@ class Message(Base):
   conversation_id = Column(Integer, ForeignKey("conversations.id"), nullable=False)
   role = Column(String(50), CheckConstraint("role IN ('user', 'assistant')"), nullable=False)
   content = Column(Text, nullable=False)
+  embedding = Column(JSON, nullable=True)
   timestamp = Column(DateTime, server_default=func.now())
 
 class Conversation(Base):
