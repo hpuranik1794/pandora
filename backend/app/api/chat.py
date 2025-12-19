@@ -13,9 +13,9 @@ async def chat_response(conversation_id: int, request: Request):
     user_input = data.get("user_input")
 
     context_messages = await get_relevant_messages(conversation_id, user_input)
-    # loop through context messages and print only the content not embedding
     for msg in context_messages:
-      print("[DEBUG] Context message:", msg)
+      print(f"[DEBUG] [context] [{msg['role']}]: {msg['content']}")
+      
     response = await generate_response(user_input, context_messages)
 
     await create_message(conversation_id, "user", user_input)

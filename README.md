@@ -60,9 +60,10 @@ Progress:
 ✅ Send and store messages
 ✅ Talk to your LLM via Docker
 ✅ Persist everything to SQLite
-✅ Simple rag pipeline with embeddings
+✅ Basic rag pipeline with conversation embeddings
 ✅ Limit model response length (user prompt or model config)
-⚙️ Improve embedding storage (add better context)
+✅ Improve embedding storage
+⚙️ Add a ton of mental health convos for better context
 ⚙️ Reduce model response time (research streaming APIs)
 
 Findings

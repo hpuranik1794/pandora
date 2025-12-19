@@ -28,10 +28,9 @@ async def get_relevant_messages(conversation_id: int, query: str, top_k=3):
   for m in messages:
     if m.embedding:
       score = cosine_similarity([query_embedding], [m.embedding])[0][0]
-      scored.append((score, m.content))
+      scored.append((score, m.content, m.role))
 
   scored.sort(reverse=True)
   
-  return [m for _, m in scored[:top_k]]
-
+  return [{"content": m[1], "role": m[2]} for m in scored[:top_k]]
 

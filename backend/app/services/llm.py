@@ -7,15 +7,15 @@ load_dotenv()
 client = OpenAI(base_url=os.getenv("BASE_URL"), api_key=os.getenv("API_KEY"))
 
 def build_prompt(user_input, context_messages):
-  context_text = "\n".join(context_messages)
-
+  context_text = "\n".join([f"{msg['role']}: {msg['content']}" for msg in context_messages])
   return f"""
     You are a compassionate mental health assistant.
-    Here are some past messages for context:
+    Here are some past messages with roles for context; note that they are not necessarily in order:
     {context_text}
 
-    User: {user_input}
-    Assistant:
+    Latest user prompt
+    user: {user_input}
+    assistant:
   """
 
 async def generate_response(user_input: str, context_messages: list) -> str:
