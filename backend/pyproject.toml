@@ -9,8 +9,11 @@ dependencies = [
     "databases>=0.9.0",
     "dotenv>=0.9.9",
     "fastapi>=0.120.0",
+    "numpy>=1.24.0",
     "openai>=2.6.0",
     "pydantic>=2.12.3",
+    "scikit-learn>=1.3.0",
     "sqlalchemy>=2.0.44",
+    "transformers>=4.35.0",
     "uvicorn>=0.38.0",
 ]

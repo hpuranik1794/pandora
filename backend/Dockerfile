@@ -5,9 +5,10 @@ WORKDIR /app
 COPY pyproject.toml ./
 COPY uv.lock ./
 RUN uv sync --locked
+RUN uv pip install torch --index-url https://download.pytorch.org/whl/cpu
 
 EXPOSE 8000
 
 COPY . .
 
-CMD ["uv", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uv", "run", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

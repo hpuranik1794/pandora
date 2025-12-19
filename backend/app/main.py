@@ -17,7 +17,9 @@ async def root():
 @app.on_event("startup")
 async def connect_db():
     await database.connect()
+    print("[INFO] Database connected")
 
 @app.on_event("shutdown")
 async def disconnect_db():
     await database.disconnect()
+    print("[INFO] Database disconnected")

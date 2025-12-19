@@ -1,11 +1,11 @@
 from app.db.database import database
 from app.db.models import Message, Conversation
-from app.services.llm_service import generate_embedding
+from app.services.embedding import embed_text
 
 async def create_message(conversation_id: int, sender: str, content: str):
   embedding = None
   if sender == "user":
-    embedding = await generate_embedding(content)
+    embedding = await embed_text(content)
     
   query = Message.__table__.insert().values(
     conversation_id=conversation_id,
