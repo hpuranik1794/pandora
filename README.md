@@ -36,6 +36,18 @@ curl -X POST  http://localhost:8000/chat/message/1 \
 curl -X POST  http://localhost:8000/chat/message/1 \
  -H "Content-type: application/json" \
  -d '{"user_input": "I have also started going for walks in the evening. It helps clear my mind."}'
+
+curl -X POST  http://localhost:8000/chat/message/1 \
+ -H "Content-type: application/json" \
+ -d '{"user_input": "Despite all this, I still get panic attacks occasionally. They are quite overwhelming."}'
+
+curl -X POST  http://localhost:8000/chat/message/1 \
+ -H "Content-type: application/json" \
+ -d '{"user_input": "What are some coping mechanisms do you think I can use?"}'
+
+curl -X POST  http://localhost:8000/chat/message/1 \
+  -H "Content-type: application/json" \
+  -d '{"user_input": "I have tried deep breathing exercises, yoga, journaling, talking to a friend or family member about my feelings but they seem to be futile. Help me mate!"}'
 ```
 
 Debug in docker container
@@ -48,10 +60,10 @@ Progress:
 ✅ Send and store messages
 ✅ Talk to your LLM via Docker
 ✅ Persist everything to SQLite
-⚙️ Embedding storage and retrieval
+✅ Simple rag pipeline with embeddings
 ✅ Limit model response length (user prompt or model config)
+⚙️ Improve embedding storage (add better context)
 ⚙️ Reduce model response time (research streaming APIs)
 
-Learnings
-- Embeddings are quick
-- Embedding retrievals are also quick
+Findings
+- Embedding creation and retrievals are quick

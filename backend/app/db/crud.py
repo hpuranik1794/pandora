@@ -3,9 +3,7 @@ from app.db.models import Message, Conversation
 from app.services.embedding import embed_text
 
 async def create_message(conversation_id: int, sender: str, content: str):
-  embedding = None
-  if sender == "user":
-    embedding = await embed_text(content)
+  embedding = await embed_text(content)
     
   query = Message.__table__.insert().values(
     conversation_id=conversation_id,
