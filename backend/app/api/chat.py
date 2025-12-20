@@ -13,15 +13,14 @@ async def chat_response(conversation_id: int, request: Request):
     user_input = data.get("user_input")
 
     context_messages = await get_relevant_messages(conversation_id, user_input)
+  
     for msg in context_messages:
-      print(f"[DEBUG] [context] [{msg['role']}]: {msg['content']}")
+      print(f"DEBUG:    [{msg['role']}]: {msg['content']}")
       
     response = await generate_response(user_input, context_messages)
+    turn_id = await create_message(conversation_id, user_input, response)
 
-    await create_message(conversation_id, "user", user_input)
-    await create_message(conversation_id, "assistant", response)
-
-    return {"response": response}
+    return {"turn_id": turn_id, "response": response}
   
   except Exception as e:
     raise HTTPException(status_code=500, detail=str(e))
