@@ -14,6 +14,10 @@ For local dev (inside `/backend`)
 uv run uvicorn app.main:app --port 8000
 ```
 
+Start frontend
+```
+npm run dev
+```
 
 Test endpoints
 ```
@@ -104,7 +108,11 @@ Model/backend improvements planned:
 ⚙️ Migrate to postgres?
 
 Next steps:
-⚙️ Frontend UI (React)
+✅ Frontend UI (React)
+⚙️ Improve UI 
+  - improve color scheme
+  - add landing page
+  - make it SaaS like with login/signup
 
 
 Findings
