@@ -23,6 +23,8 @@ async def chat_response(conversation_id: int, request: Request):
     return {"turn_id": turn_id, "response": response}
   
   except Exception as e:
+    import traceback
+    traceback.print_exc()
     raise HTTPException(status_code=500, detail=str(e))
 
 
