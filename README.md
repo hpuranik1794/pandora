@@ -96,11 +96,15 @@ Progress:
   3) Enforce a simple response template
     Small models do better when you specify a predictable structure.
 ✅ Improve rag by filtering recent and relevant messages and getting both user and assistant messages from those turns.
-⚙️ Add a ton of mental health convos for better context
-    (always wrap retrieved content with a "this is general info" system instruction)
 
+Model/backend improvements planned:
+⚙️ Move to a larger LM (7B+)
 ⚙️ Reduce model response time (research streaming APIs)
+⚙️ Add mental health convos for better context (always wrap retrieved content with a "this is general info" system instruction)
 ⚙️ Migrate to postgres?
+
+Next steps:
+⚙️ Frontend UI (React)
 
 
 Findings
