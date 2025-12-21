@@ -103,8 +103,9 @@ Progress:
 
 Model/backend improvements planned:
 ⚙️ Move to a larger LM (7B+)
-⚙️ Reduce model response time (research streaming APIs)
-⚙️ Add mental health convos for better context (always wrap retrieved content with a "this is general info" system instruction)
+⚙️ Reduce model response time
+⚙️ research streaming APIs
+⚙️ Add mental health convos for better context
 ⚙️ Migrate to postgres?
 ⚙️ encryption based on user?
 
