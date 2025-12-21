@@ -106,13 +106,15 @@ Model/backend improvements planned:
 ⚙️ Reduce model response time (research streaming APIs)
 ⚙️ Add mental health convos for better context (always wrap retrieved content with a "this is general info" system instruction)
 ⚙️ Migrate to postgres?
+⚙️ encryption based on user?
 
 Next steps:
 ✅ Frontend UI (React)
-⚙️ Improve UI 
-  - improve color scheme
-  - add landing page
-  - make it SaaS like with login/signup
+✅ Improve UI 
+  ✅ add landing page
+  ✅ improve color scheme
+  ✅ make it SaaS like 
+  ⚙️ login/signup
 
 
 Findings
