@@ -80,47 +80,46 @@ Debug in docker container
 docker compose logs backend --tail 100
 ```
 
-Progress:
-✅ CRUD chat sessions
-✅ CRUD messages
-✅ Talk to LLM via Docker
-✅ Persist everything to SQLite
-✅ Basic rag pipeline with user embeddings
-✅ Limit model response length (user prompt or model config)
-✅ Improve embedding storage
-✅ Store user and assistant messages together?
-    Soln: turn_id (uuid/int): same turn_id for the user message and the assistant reply so you can treat them as a pair when needed.
+Progress:  
+✅ CRUD chat sessions  
+✅ CRUD messages  
+✅ Talk to LLM via Docker  
+✅ Persist everything to SQLite  
+✅ Basic rag pipeline with user embeddings  
+✅ Limit model response length (user prompt or model config)  
+✅ Improve embedding storage  
+✅ Store user and assistant messages together? Soln: turn_id (uuid/int): same turn_id for the user message and the assistant reply so you can treat them as a pair when needed.
 
 ✅ Improve model prompt
-  1) Make the system message do all instruction/formatting
-    Keep your “rules” there (tone, word limit, safety, style).
-  2) Use the user message for:
-    (Optional) a compact “memory/context” section
-    the user’s new message
-  3) Enforce a simple response template
-    Small models do better when you specify a predictable structure.
+  - system instructions for formatting (include all rules here)
+  - enforce a simple response template (empathize, question, suggestion)
+  
 ✅ Improve rag by filtering recent and relevant messages and getting both user and assistant messages from those turns.
 
-Model/backend improvements planned:
-⚙️ Move to a larger LM (7B+)
-⚙️ Reduce model response time
-⚙️ research streaming APIs
-⚙️ Add mental health convos for better context
-⚙️ Migrate to postgres?
-⚙️ encryption based on user?
+Model/backend improvements planned:  
+✅ Move to a larger LM (7B+) - run models on ollama  
+✅ Reduce model response time - indirectly resolved via ollama cloud  
+✅ research streaming APIs  
+✅ implement streaming responses in frontend  
+⚙️ switch to ollama models for embeddings (one place for everything)  
+⚙️ Add real life mental health convos for better context  
+⚙️ Migrate to postgres for better semantic search?  
+⚙️ encryption based on user?  
 
-Next steps:
-✅ Frontend UI (React)
-✅ Improve UI 
-  ✅ add landing page
-  ✅ improve color scheme
-  ✅ make it SaaS like 
-  ⚙️ login/signup
+Next steps:  
+✅ Frontend UI (React)  
+✅ Improve UI  
+  ✅ add landing page  
+  ✅ improve color scheme  
+  ✅ SaaS like   
+  ⚙️ login/signup  
 
 
 Findings
 - Embedding creation and retrievals are quick
 - Small models are not good at following complex instructions, even formatting ones. Improved the prompt but it seems like I've hit the small model ceiling. But it's good enough for now.
-- Can improve RAG pipeline by adding mental health specific convos to the DB for better context retrieval. But issues lie in 
-  - parroting dataset style instead of being grounded in the user's context
-  - can include bad advice, mismatched tone or unsafe content.
+- Can improve RAG by adding mental health specific convos to the DB for better context retrieval. But issues:
+  - strict adherence to dataset style instead of grounding in the user's context
+  - bad advice or mismatched tone
+- Using ollama models on the cloud are significantly better in terms of performance and speed than running local models via docker (obv, since they have access to gpu)
+- yield keyword (vs return): generator function that returns as soon as it the first value is available then goes back to the function, useful for streaming

@@ -18,12 +18,26 @@ export const getMessages = async (conversationId) => {
   return res.json();
 };
 
-export const sendMessage = async (conversationId, userInput) => {
-  const res = await fetch(`${API_BASE}/message/${conversationId}`, {
+export const streamMessage = async (conversationId, userInput, onChunk) => {
+  const response = await fetch(`${API_BASE}/message/${conversationId}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ user_input: userInput }),
   });
-  if (!res.ok) throw new Error('Failed to send message');
-  return res.json();
+
+  if (!response.ok) throw new Error('Failed to send message');
+
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    const textChunk = decoder.decode(value, { stream: true });
+    
+    for (const char of textChunk) {
+      onChunk(char);
+      await new Promise(resolve => setTimeout(resolve, 30));
+    }
+  }
 };

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Sidebar } from './Sidebar';
 import { ChatArea } from './ChatArea';
-import { createConversation, getConversations, getMessages, sendMessage } from '../api';
+import { createConversation, getConversations, getMessages, streamMessage } from '../api';
 
 export function ChatInterface() {
   const [conversations, setConversations] = useState([]);
@@ -57,13 +57,23 @@ export function ChatInterface() {
     if (!currentConversationId) return;
 
     const tempMessage = { role: 'user', content: text };
-    setMessages(prev => [...prev, tempMessage]);
+    setMessages(prev => [...prev, tempMessage, { role: 'assistant', content: '' }]);
     setIsLoading(true);
 
     try {
-      const data = await sendMessage(currentConversationId, text);
-      const botMessage = { role: 'assistant', content: data.response };
-      setMessages(prev => [...prev, botMessage]);
+      await streamMessage(currentConversationId, text, (chunk) => {
+        setMessages(prev => {
+          const newMessages = [...prev];
+          const lastMsgIndex = newMessages.length - 1;
+          if (newMessages[lastMsgIndex].role === 'assistant') {
+             newMessages[lastMsgIndex] = {
+                ...newMessages[lastMsgIndex],
+                content: newMessages[lastMsgIndex].content + chunk
+             };
+          }
+          return newMessages;
+        });
+      });
     } catch (error) {
       console.error('Failed to send message:', error);
     } finally {

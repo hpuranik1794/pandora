@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Send, Bot, User, Loader2 } from 'lucide-react';
+import { Send, Bot, User } from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
 
 export function ChatArea({ messages, isLoading, onSendMessage }) {
@@ -58,16 +58,6 @@ export function ChatArea({ messages, isLoading, onSendMessage }) {
               </div>
             </div>
           ))
-        )}
-        {isLoading && (
-          <div className="flex gap-4 max-w-3xl mx-auto">
-             <div className="w-8 h-8 rounded-full bg-white border border-primary-200 text-primary-800 flex items-center justify-center flex-shrink-0 shadow-sm">
-                <Bot size={16} />
-              </div>
-              <div className="bg-white border border-primary-200 px-4 py-3 rounded-2xl rounded-tl-none shadow-sm">
-                <Loader2 size={16} className="animate-spin text-primary-400" />
-              </div>
-          </div>
         )}
         <div ref={messagesEndRef} />
       </div>
