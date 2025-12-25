@@ -1,11 +1,13 @@
+import os
 from fastapi import FastAPI
 from sqlalchemy import create_engine
-from app.db.database import database, DATABASE_URL, metadata
+from app.db.database import database, metadata
 from app.api import chat
 
 app = FastAPI()
 
-engine = create_engine(DATABASE_URL.replace("+aiosqlite", ""))
+DATABASE_URL = os.getenv("DATABASE_URL").replace("+asyncpg", "+psycopg2")
+engine = create_engine(DATABASE_URL)
 metadata.create_all(engine)
 
 app.include_router(chat.router)

@@ -12,13 +12,22 @@ client = Client(
 
 
 def build_prompt(user_input, context_messages):
-  if context_messages:
-    context_text = "\n".join([f"- {msg['role'].upper()}: {msg['content']}" for msg in context_messages])
-    context_block = f"Prior context (most relevant, in order):\n{context_text}\n"
-  else:
-    context_block = "Prior context: (none)\n"
+  rag_section = ""
+  history_section = ""
 
-  return f"{context_block}New user message:\n{user_input}\n"
+  if context_messages:
+    rag_msgs = [m for m in context_messages if m.get("source") == "rag"]
+    history_msgs = [m for m in context_messages if m.get("source") == "history"]
+
+    if rag_msgs:
+      rag_text = "\n".join([f"- {msg['role'].upper()}: {msg['content']}" for msg in rag_msgs])
+      rag_section = f"Reference examples (similar past conversations):\n{rag_text}\n\n"
+    
+    if history_msgs:
+      hist_text = "\n".join([f"- {msg['role'].upper()}: {msg['content']}" for msg in history_msgs])
+      history_section = f"Current conversation history (most relevant):\n{hist_text}\n\n"
+
+  return f"{rag_section}{history_section}New user message:\n{user_input}\n"
 
 
 def generate_response(user_input: str, context_messages: list = []) -> Generator[str, None, None]:

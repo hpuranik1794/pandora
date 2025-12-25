@@ -80,11 +80,17 @@ Debug in docker container
 docker compose logs backend --tail 100
 ```
 
+```
+docker run -d -p 5432:5432 --name pandora -e POSTGRES_USER=pandora -e POSTGRES_PASSWORD=root -e POSTGRES_DB=pandora postgres
+
+docker exec -it pandora psql -U pandora -d pandora
+```
+
 Progress:  
 ✅ CRUD chat sessions  
 ✅ CRUD messages  
 ✅ Talk to LLM via Docker  
-✅ Persist everything to SQLite  
+✅ Persist everything to PostgreSQL  
 ✅ Basic rag pipeline with user embeddings  
 ✅ Limit model response length (user prompt or model config)  
 ✅ Improve embedding storage  
@@ -101,10 +107,11 @@ Model/backend improvements planned:
 ✅ Reduce model response time - indirectly resolved via ollama cloud  
 ✅ research streaming APIs  
 ✅ implement streaming responses in frontend  
-⚙️ switch to ollama models for embeddings (one place for everything)  
-⚙️ Add real life mental health convos for better context  
-⚙️ Migrate to postgres for better semantic search?  
+✅ Add [real life mental health counselling convos](https://huggingface.co/datasets/Amod/mental_health_counseling_conversations) for better context  
+✅ Migrate to postgres for better semantic search  
+✅ test postgres migration and performance   
 ⚙️ encryption based on user?  
+❌ Switch to ollama models for embeddings (one place for everything)   
 
 Next steps:  
 ✅ Frontend UI (React)  

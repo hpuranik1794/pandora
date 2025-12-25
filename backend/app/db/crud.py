@@ -1,7 +1,7 @@
 from app.db.database import database
 from app.db.models import Message, Conversation
 from app.services.embedding import embed_text
-from sqlalchemy import select, func
+from sqlalchemy import select, func, text
 
 async def next_turn_id(conversation_id: int) -> int:
   q = select(func.coalesce(func.max(Message.turn_id), 0)).where(Message.conversation_id == conversation_id)
@@ -20,14 +20,14 @@ async def create_message(conversation_id: int, user_input: str, response: str):
     role="user",
     content=user_input,
     embedding=user_embedding
-  ))
+  ).returning(Message.id))
 
   await database.execute(Message.__table__.insert().values(
     conversation_id=conversation_id,
     turn_id=turn_id,
     role="assistant",
     content=response
-  ))
+  ).returning(Message.id))
   
   return turn_id
 
@@ -38,8 +38,8 @@ async def get_messages(conversation_id: int):
 
 
 async def create_conversation():
-  query = Conversation.__table__.insert().values()
-  conversation_id = await database.execute(query)
+  query = text("INSERT INTO conversations DEFAULT VALUES RETURNING id")
+  conversation_id = await database.fetch_val(query)
 
   return conversation_id
 

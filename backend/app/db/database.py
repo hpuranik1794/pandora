@@ -1,8 +1,10 @@
 from sqlalchemy import MetaData
 from databases import Database
+from dotenv import load_dotenv
+import os
 
-DATABASE_URL = "sqlite+aiosqlite:///./chatbot.db"
+load_dotenv()
 
-database = Database(DATABASE_URL)
+database = Database(os.getenv("DATABASE_URL"))
 
 metadata = MetaData()

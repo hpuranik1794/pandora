@@ -2,8 +2,21 @@ from sqlalchemy import Column, Integer, String, Text, DateTime, CheckConstraint,
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.sql import func
 from app.db.database import metadata
+from pgvector.sqlalchemy import Vector
 
 Base = declarative_base(metadata=metadata)
+
+class RagMessage(Base):
+  __tablename__ = "rag_messages"
+
+  id = Column(Integer, primary_key=True, autoincrement=True)
+  turn_id = Column(Integer, nullable=False)
+  role = Column(String(50), CheckConstraint("role IN ('user', 'assistant')"), nullable=False)
+  content = Column(Text, nullable=False)
+  embedding = Column(JSON, nullable=True)
+  embedding_vec = Column(Vector(1024), nullable=True)
+  timestamp = Column(DateTime, server_default=func.now())
+
 
 class Message(Base):
   __tablename__ = "messages"
