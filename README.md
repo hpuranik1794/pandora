@@ -13,6 +13,17 @@ For local dev (inside `/backend`)
 ```
 uv run uvicorn app.main:app --port 8000
 ```
+HTTPS TLS server
+1. Generate certificates (using mkcert recommended):
+  ```bash
+  mkcert localhost
+  # This creates localhost.pem and localhost-key.pem
+  mv localhost*.pem backend/
+  ```
+2. Run server:
+  ```
+  uv run uvicorn app.main:app --host 0.0.0.0 --port 8000 --ssl-keyfile=localhost-key.pem --ssl-certfile=localhost.pem
+  ```
 
 Start frontend
 ```
@@ -110,7 +121,8 @@ Model/backend improvements planned:
 ✅ Add [real life mental health counselling convos](https://huggingface.co/datasets/Amod/mental_health_counseling_conversations) for better context  
 ✅ Migrate to postgres for better semantic search  
 ✅ test postgres migration and performance   
-⚙️ encryption based on user?  
+✅ encryption at rest (database)
+✅ encryption in transit (https/tls)
 ❌ Switch to ollama models for embeddings (one place for everything)   
 
 Next steps:  
@@ -120,7 +132,7 @@ Next steps:
   ✅ improve color scheme  
   ✅ SaaS like   
   ⚙️ login/signup  
-
+⚙️ code cleanup  
 
 Findings
 - Embedding creation and retrievals are quick

@@ -1,6 +1,7 @@
 from app.db.database import database
 from app.db.models import Message, Conversation
 from app.services.embedding import embed_text
+from app.services.security import encrypt_content, decrypt_content
 from sqlalchemy import select, func, text
 
 async def next_turn_id(conversation_id: int) -> int:
@@ -14,27 +15,41 @@ async def create_message(conversation_id: int, user_input: str, response: str):
 
   user_embedding = await embed_text(user_input)
   
+  # Encrypt user content
+  encrypted_user_input = encrypt_content(user_input)
+  
   await database.execute(Message.__table__.insert().values(
     conversation_id=conversation_id,
     turn_id=turn_id,
     role="user",
-    content=user_input,
+    content=encrypted_user_input,
     embedding=user_embedding
   ).returning(Message.id))
+
+  # Encrypt assistant response
+  encrypted_response = encrypt_content(response)
 
   await database.execute(Message.__table__.insert().values(
     conversation_id=conversation_id,
     turn_id=turn_id,
     role="assistant",
-    content=response
+    content=encrypted_response
   ).returning(Message.id))
   
   return turn_id
 
 async def get_messages(conversation_id: int):
   query = Message.__table__.select().where(Message.__table__.c.conversation_id == conversation_id)
-
-  return await database.fetch_all(query)
+  rows = await database.fetch_all(query)
+  
+  # Decrypt content
+  decrypted_rows = []
+  for row in rows:
+    row_dict = dict(row)
+    row_dict["content"] = decrypt_content(row_dict["content"])
+    decrypted_rows.append(row_dict)
+      
+  return decrypted_rows
 
 
 async def create_conversation():

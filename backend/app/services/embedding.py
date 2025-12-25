@@ -95,17 +95,17 @@ async def get_relevant_messages(conversation_id: int, query: str, top_k=2):
   if not all_msgs:
     return rag_context
 
-  all_msgs = sorted(all_msgs, key=lambda m: (m.timestamp, m.id))
+  all_msgs = sorted(all_msgs, key=lambda m: (m["timestamp"], m["id"]))
 
   turns = dict()  # turn_id -> {"user": msg dict, "assistant": msg dict}
   for m in all_msgs:
-    if m.turn_id is None:
+    if m["turn_id"] is None:
       continue
 
-    bucket = turns.setdefault(m.turn_id, {"user": None, "assistant": None, "ts": None})
-    bucket[m.role] = m
-    if m.role == "user":
-      bucket["ts"] = (m.timestamp, m.id)
+    bucket = turns.setdefault(m["turn_id"], {"user": None, "assistant": None, "ts": None})
+    bucket[m["role"]] = m
+    if m["role"] == "user":
+      bucket["ts"] = (m["timestamp"], m["id"])
 
   # recent turn ids
   recent_turn_ids = []
@@ -118,10 +118,10 @@ async def get_relevant_messages(conversation_id: int, query: str, top_k=2):
   scored = []
   for tid, pair in turns.items():
     user_msg = pair.get("user")
-    if not user_msg or not user_msg.embedding:
+    if not user_msg or not user_msg.get("embedding"):
       continue
     
-    u_emb = np.array(user_msg.embedding)
+    u_emb = np.array(user_msg["embedding"])
     score = cosine_similarity([q_emb_np], [u_emb])[0][0]
     scored.append((score, tid))
 
@@ -148,9 +148,9 @@ async def get_relevant_messages(conversation_id: int, query: str, top_k=2):
     a = pair.get("assistant")
     
     if u:
-      history_context.append({"role": "user", "content": u.content, "source": "history"})
+      history_context.append({"role": "user", "content": u["content"], "source": "history"})
     if a:
-      history_context.append({"role": "assistant", "content": a.content, "source": "history"})
+      history_context.append({"role": "assistant", "content": a["content"], "source": "history"})
 
   # Mark RAG context source
   for msg in rag_context:
