@@ -6,8 +6,23 @@ const getHeaders = () => {
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;
   }
+
   return headers;
 };
+
+const handleResponse = async (res) => {
+  if (res.status === 401) {
+    localStorage.removeItem('token');
+    window.location.href = '/login';
+    throw new Error('Unauthorized');
+  }
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => ({}));
+    throw new Error(errorData.detail || 'Request failed');
+  }
+  return res.json();
+};
+
 
 export const login = async (username, password) => {
   const formData = new FormData();
@@ -15,57 +30,54 @@ export const login = async (username, password) => {
   formData.append('password', password);
   
   const res = await fetch(`${API_BASE}/auth/login`, {
-      method: 'POST',
-      body: formData
+    method: 'POST',
+    body: formData
   });
-  if (!res.ok) throw new Error('Login failed');
-  return res.json();
+
+  return handleResponse(res);
 }
 
 export const signup = async (username, password) => {
   const res = await fetch(`${API_BASE}/auth/signup`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, password })
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, password })
   });
-  if (!res.ok) {
-      const err = await res.json();
-      throw new Error(err.detail || 'Signup failed');
-  }
-  return res.json();
+
+  return handleResponse(res);
 }
 
 export const getMe = async () => {
   const res = await fetch(`${API_BASE}/auth/me`, {
-      headers: getHeaders()
+    headers: getHeaders()
   });
-  if (!res.ok) throw new Error('Failed to fetch user info');
-  return res.json();
+
+  return handleResponse(res);
 };
 
 export const createConversation = async () => {
   const res = await fetch(`${API_BASE}/chat/conversations`, { 
-      method: 'POST',
-      headers: getHeaders()
+    method: 'POST',
+    headers: getHeaders()
   });
-  if (!res.ok) throw new Error('Failed to create conversation');
-  return res.json();
+
+  return handleResponse(res);
 };
 
 export const getConversations = async () => {
   const res = await fetch(`${API_BASE}/chat/conversations`, {
-      headers: getHeaders()
+    headers: getHeaders()
   });
-  if (!res.ok) throw new Error('Failed to fetch conversations');
-  return res.json();
+
+  return handleResponse(res);
 };
 
 export const getMessages = async (conversationId) => {
   const res = await fetch(`${API_BASE}/chat/message/${conversationId}`, {
-      headers: getHeaders()
+    headers: getHeaders()
   });
-  if (!res.ok) throw new Error('Failed to fetch messages');
-  return res.json();
+
+  return handleResponse(res);
 };
 
 export const streamMessage = async (conversationId, userInput, onChunk) => {
@@ -74,6 +86,12 @@ export const streamMessage = async (conversationId, userInput, onChunk) => {
     headers: getHeaders(),
     body: JSON.stringify({ user_input: userInput }),
   });
+
+  if (response.status === 401) {
+    localStorage.removeItem('token');
+    window.location.href = '/login';
+    throw new Error('Unauthorized');
+  }
 
   if (!response.ok) throw new Error('Failed to send message');
 
