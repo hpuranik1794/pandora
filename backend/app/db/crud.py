@@ -1,5 +1,5 @@
 from app.db.database import database
-from app.db.models import Message, Conversation
+from app.db.models import Message, Conversation, User
 from app.services.embedding import embed_text
 from app.services.security import encrypt_content, decrypt_content
 from sqlalchemy import select, func, text
@@ -51,14 +51,29 @@ async def get_messages(conversation_id: int):
       
   return decrypted_rows
 
+async def get_user_by_username(username: str):
+    query = User.__table__.select().where(User.username == username)
+    return await database.fetch_one(query)
 
-async def create_conversation():
-  query = text("INSERT INTO conversations DEFAULT VALUES RETURNING id")
+async def create_user(user: dict):
+    query = User.__table__.insert().values(
+        username=user["username"],
+        hashed_password=user["hashed_password"]
+    )
+    return await database.execute(query)
+
+async def create_conversation(user_id: int):
+  query = Conversation.__table__.insert().values(user_id=user_id).returning(Conversation.id)
   conversation_id = await database.fetch_val(query)
 
   return conversation_id
 
-async def get_conversations():
-  query = Conversation.__table__.select()
+async def get_conversations(user_id: int):
+  query = Conversation.__table__.select().where(Conversation.user_id == user_id).order_by(Conversation.created_at.asc())
 
   return await database.fetch_all(query)
+
+async def get_conversation(conversation_id: int):
+  query = Conversation.__table__.select().where(Conversation.id == conversation_id)
+
+  return await database.fetch_one(query)

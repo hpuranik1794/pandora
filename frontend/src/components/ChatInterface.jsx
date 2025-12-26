@@ -1,17 +1,28 @@
 import { useState, useEffect } from 'react';
 import { Sidebar } from './Sidebar';
 import { ChatArea } from './ChatArea';
-import { createConversation, getConversations, getMessages, streamMessage } from '../api';
+import { createConversation, getConversations, getMessages, streamMessage, getMe } from '../api';
 
 export function ChatInterface() {
   const [conversations, setConversations] = useState([]);
   const [currentConversationId, setCurrentConversationId] = useState(null);
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
+    loadUser();
     loadConversations();
   }, []);
+
+  const loadUser = async () => {
+    try {
+      const userData = await getMe();
+      setUser(userData);
+    } catch (error) {
+      console.error('Failed to load user:', error);
+    }
+  };
 
   useEffect(() => {
     if (currentConversationId) {
@@ -88,6 +99,7 @@ export function ChatInterface() {
         currentConversationId={currentConversationId}
         onSelectConversation={setCurrentConversationId}
         onNewChat={handleNewChat}
+        user={user}
       />
       <ChatArea
         messages={messages}

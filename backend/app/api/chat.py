@@ -1,14 +1,24 @@
-from app.db.crud import create_message, get_messages, create_conversation, get_conversations
+from app.db.crud import create_message, get_messages, create_conversation, get_conversations, get_conversation
 from app.services.embedding import get_relevant_messages
 from app.services.llm import generate_response
-from fastapi import APIRouter, HTTPException, Request
+from app.services.auth import get_current_user
+from fastapi import APIRouter, HTTPException, Request, Depends
 from fastapi.responses import StreamingResponse
 
 
 router = APIRouter(prefix="/chat", tags=["chat"])
+
+async def validate_conversation_access(conversation_id: int, user):
+  conversation = await get_conversation(conversation_id)
+  if not conversation:
+    raise HTTPException(status_code=404, detail="Conversation not found")
+  if conversation.user_id and conversation.user_id != user.id:
+    raise HTTPException(status_code=403, detail="Not authorized to access this conversation")
+  return conversation
   
 @router.post("/message/{conversation_id}")
-async def stream_chat_response(conversation_id: int, request: Request):
+async def stream_chat_response(conversation_id: int, request: Request, current_user = Depends(get_current_user)):
+  await validate_conversation_access(conversation_id, current_user)
   try:
     data = await request.json()
     user_input = data.get("user_input")
@@ -34,7 +44,8 @@ async def stream_chat_response(conversation_id: int, request: Request):
 
 
 @router.get("/message/{conversation_id}")
-async def chat_message_history(conversation_id: int):
+async def chat_message_history(conversation_id: int, current_user = Depends(get_current_user)):
+  await validate_conversation_access(conversation_id, current_user)
   try:
     messages = await get_messages(conversation_id)
 
@@ -45,9 +56,9 @@ async def chat_message_history(conversation_id: int):
   
 
 @router.post("/conversations")
-async def create_new_conversation():
+async def create_new_conversation(current_user = Depends(get_current_user)):
   try:
-    conversation_id = await create_conversation()
+    conversation_id = await create_conversation(user_id=current_user.id)
 
     return {"conversation_id": conversation_id}
   
@@ -55,9 +66,9 @@ async def create_new_conversation():
     raise HTTPException(status_code=500, detail=str(e))
   
 @router.get("/conversations")
-async def get_all_conversations():
+async def get_all_conversations(current_user = Depends(get_current_user)):
   try:
-    conversations = await get_conversations()
+    conversations = await get_conversations(user_id=current_user.id)
 
     return conversations
   

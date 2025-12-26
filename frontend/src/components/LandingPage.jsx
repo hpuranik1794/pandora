@@ -1,8 +1,9 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
-import { Heart, Sparkles } from 'lucide-react';
+import { Heart, Sparkles, MessageCircle } from 'lucide-react';
 
 export function LandingPage() {
+  const isLoggedIn = !!localStorage.getItem('token');
+
   return (
     <div className="min-h-screen bg-primary-50 font-sans text-primary-800">
       {/* Navigation */}
@@ -15,10 +16,19 @@ export function LandingPage() {
               </div>
             </div>
             <div className="flex items-center gap-6">
-              <Link to="/chat" className="text-primary-800 font-medium hover:opacity-70 transition-opacity">Log in</Link>
-              <Link to="/chat" className="bg-primary-800 text-white px-6 py-3 rounded-full font-medium hover:bg-primary-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
-                Get started
-              </Link>
+              {isLoggedIn ? (
+                <Link to="/chat" className="bg-primary-800 text-white px-6 py-3 rounded-full font-medium hover:bg-primary-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center gap-2">
+                  <MessageCircle size={18} />
+                  Go to Chat
+                </Link>
+              ) : (
+                <>
+                  <Link to="/login" className="text-primary-800 font-medium hover:opacity-70 transition-opacity">Log in</Link>
+                  <Link to="/signup" className="bg-primary-800 text-white px-6 py-3 rounded-full font-medium hover:bg-primary-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                    Get started
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -35,9 +45,16 @@ export function LandingPage() {
             </p>
             
             <div className="flex justify-center">
-              <Link to="/chat" className="bg-primary-800 text-white px-8 py-4 rounded-full text-lg font-medium hover:bg-primary-700 transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-1">
-                Start talking now
-              </Link>
+              {isLoggedIn ? (
+                <Link to="/chat" className="bg-primary-800 text-white px-8 py-4 rounded-full text-lg font-medium hover:bg-primary-700 transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-1 flex items-center gap-2">
+                  <MessageCircle size={20} />
+                  Continue Conversation
+                </Link>
+              ) : (
+                <Link to="/signup" className="bg-primary-800 text-white px-8 py-4 rounded-full text-lg font-medium hover:bg-primary-700 transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-1">
+                  Start talking now
+                </Link>
+              )}
             </div>
 
             {/* Decorative Elements */}

@@ -2,7 +2,7 @@ import os
 from fastapi import FastAPI
 from sqlalchemy import create_engine
 from app.db.database import database, metadata
-from app.api import chat
+from app.api import chat, auth
 
 app = FastAPI()
 
@@ -10,6 +10,7 @@ DATABASE_URL = os.getenv("DATABASE_URL").replace("+asyncpg", "+psycopg2")
 engine = create_engine(DATABASE_URL)
 metadata.create_all(engine)
 
+app.include_router(auth.router)
 app.include_router(chat.router)
 
 @app.get("/")

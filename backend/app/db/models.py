@@ -29,9 +29,18 @@ class Message(Base):
   embedding = Column(JSON, nullable=True)
   timestamp = Column(DateTime, server_default=func.now())
 
+class User(Base):
+  __tablename__ = "users"
+
+  id = Column(Integer, primary_key=True, autoincrement=True)
+  username = Column(String(50), unique=True, nullable=False)
+  hashed_password = Column(String(255), nullable=False)
+  created_at = Column(DateTime, server_default=func.now())
+
 class Conversation(Base):
   __tablename__ = "conversations"
 
   id = Column(Integer, primary_key=True, autoincrement=True)
+  user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
   created_at = Column(DateTime, server_default=func.now())
     

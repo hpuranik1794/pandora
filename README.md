@@ -131,7 +131,8 @@ Next steps:
   ✅ add landing page  
   ✅ improve color scheme  
   ✅ SaaS like   
-  ⚙️ login/signup  
+  ✅ login/signup  
+  ✅ tightly knit UI workflow  
 ⚙️ code cleanup  
 
 Findings
