@@ -67,11 +67,15 @@ mkcert localhost
 mv localhost-key.pem localhost.pem backend/
 ```
 
-**Environment Variables (`backend/.env`):**
+**Environment Variables (`.env`):**
+Create a `.env` file in the root directory.
+
 ```ini
 DATABASE_URL=postgresql+asyncpg://user:password@localhost/pandora_db
-SECRET_KEY=your_jwt_secret_key
-ENCRYPTION_KEY=your_base64_encoded_32byte_key
+# Generate using: python -c "import secrets; print(secrets.token_urlsafe(32))"
+SECRET_KEY=your_generated_secret_key
+# Generate using: python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
+ENCRYPTION_KEY=your_generated_fernet_key
 OLLAMA_API_KEY=your_ollama_api_key
 OLLAMA_MODEL=gemma3:12b-cloud
 ```
