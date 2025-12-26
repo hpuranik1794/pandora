@@ -11,11 +11,3 @@ services:
     env_file: '.env'
     ports:
       - "8000:8000"
-    depends_on:
-      - llm
-
-  llm:
-    provider:
-      type: model
-      options:
-        model: ${LLM_MODEL:-ai/smollm2:latest}

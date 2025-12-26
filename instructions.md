@@ -121,8 +121,8 @@ Model/backend improvements planned:
 ✅ Add [real life mental health counselling convos](https://huggingface.co/datasets/Amod/mental_health_counseling_conversations) for better context  
 ✅ Migrate to postgres for better semantic search  
 ✅ test postgres migration and performance   
-✅ encryption at rest (database)
-✅ encryption in transit (https/tls)
+✅ encryption at rest (database)  
+✅ encryption in transit (https/tls)  
 ❌ Switch to ollama models for embeddings (one place for everything)   
 
 Next steps:  
@@ -144,3 +144,4 @@ Findings
   - bad advice or mismatched tone
 - Using ollama models on the cloud are significantly better in terms of performance and speed than running local models via docker (obv, since they have access to gpu)
 - yield keyword (vs return): generator function that returns as soon as it the first value is available then goes back to the function, useful for streaming
+- certificates used to authenticate requests between client and server, encrypt data while moving across network, private key used for decryption server-side and public key for encryption client-side
