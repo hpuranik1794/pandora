@@ -1,9 +1,3 @@
-import sys
-import os
-
-# Add the parent directory to sys.path to allow importing from app
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
 from sqlalchemy import create_engine
 from sqlalchemy.engine import URL
 from sqlalchemy.orm import sessionmaker
@@ -32,7 +26,7 @@ Base.metadata.create_all(pg_engine)
 
 
 def migrate_data():
-  print("Reading SQLite conversations...")
+  print("Reading SQLite data...")
   conversations = sqlite_session.query(Conversation).all()
 
   for conv in conversations:

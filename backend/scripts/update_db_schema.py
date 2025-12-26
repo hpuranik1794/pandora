@@ -1,10 +1,5 @@
-import sys
 import os
 from sqlalchemy import create_engine, text
-
-# Add the parent directory to sys.path
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -22,7 +17,6 @@ def update_schema():
     print("Checking schema updates...")
     
     try:
-      # Try to add user_id column to conversations
       print("Attempting to add user_id column to conversations table...")
       conn.execute(text("ALTER TABLE conversations ADD COLUMN IF NOT EXISTS user_id INTEGER REFERENCES users(id)"))
       conn.commit()

@@ -6,7 +6,7 @@ export function LandingPage() {
 
   return (
     <div className="min-h-screen bg-primary-50 font-sans text-primary-800">
-      {/* Navigation */}
+      {/* nav */}
       <nav className="sticky top-0 z-50 bg-primary-50/80 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
@@ -33,8 +33,8 @@ export function LandingPage() {
           </div>
         </div>
       </nav>
-
-      {/* Hero Section */}
+      
+      {/* landing */}
       <div className="relative overflow-hidden pt-16 pb-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h1 className="text-5xl md:text-7xl font-serif text-primary-800 mb-8 leading-tight">
@@ -57,7 +57,6 @@ export function LandingPage() {
               )}
             </div>
 
-            {/* Decorative Elements */}
             <div className="absolute top-1/4 left-10 hidden lg:block animate-bounce-slow">
                 <Sparkles className="w-12 h-12 text-yellow-400 opacity-80" />
             </div>
@@ -67,7 +66,7 @@ export function LandingPage() {
         </div>
       </div>
 
-      {/* Minimal Footer */}
+      {/* footer */}
       <footer className="bg-primary-900 border-t border-primary-800 py-6">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center gap-2">
           <span className="font-serif text-xl font-bold text-primary-50">Pandora</span>

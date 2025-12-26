@@ -2,11 +2,9 @@ from sqlalchemy import create_engine, Column, Integer, String, Text, DateTime, C
 from sqlalchemy.engine import URL
 from sqlalchemy.orm import declarative_base, sessionmaker
 from sqlalchemy.sql import func
-from sqlalchemy import select
 from pgvector.sqlalchemy import Vector
 from services.embedding import embed_text
 import pandas as pd
-import asyncio
 
 
 url = URL.create(
@@ -76,7 +74,7 @@ def update_embeddings():
   Session = sessionmaker(bind=engine)
   session = Session()
 
-  messages = session.query(Message).filter(Message.embedding != None).all()
+  messages = session.query(RagMessage).filter(RagMessage.embedding != None).all()
 
   for msg in messages:
     try:

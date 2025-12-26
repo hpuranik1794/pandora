@@ -1,7 +1,7 @@
 from typing import Generator
+import os
 from ollama import Client
 from dotenv import load_dotenv
-import os
 
 load_dotenv()
 

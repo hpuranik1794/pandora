@@ -1,8 +1,8 @@
 from sqlalchemy import Column, Integer, String, Text, DateTime, CheckConstraint, ForeignKey, JSON
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.sql import func
-from app.db.database import metadata
 from pgvector.sqlalchemy import Vector
+from app.db.database import metadata
 
 Base = declarative_base(metadata=metadata)
 
@@ -28,6 +28,7 @@ class Message(Base):
   content = Column(Text, nullable=False)
   embedding = Column(JSON, nullable=True)
   timestamp = Column(DateTime, server_default=func.now())
+
 
 class User(Base):
   __tablename__ = "users"

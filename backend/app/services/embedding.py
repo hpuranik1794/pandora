@@ -11,7 +11,6 @@ async def embed_text(text: str):
   inputs = tokenizer(text, return_tensors="pt", truncation=True, max_length=512)
   with torch.no_grad():
     outputs = model(**inputs)
-    # assume it returns last_hidden_state; you'll need pooling
     embedding = outputs.last_hidden_state[:,0,:].cpu().numpy()
 
   return embedding.flatten().tolist()
@@ -21,8 +20,6 @@ async def embed_text(text: str):
 async def get_rag_context(query_emb: list, top_k: int = 2):
   from app.db.database import database
   
-  # Find similar user messages in the RAG dataset
-  # We use the <=> operator for cosine distance
   sql = """
     SELECT turn_id
     FROM rag_messages
@@ -31,7 +28,6 @@ async def get_rag_context(query_emb: list, top_k: int = 2):
     LIMIT :limit
   """
   
-  # Convert list to string format '[1,2,3]' for pgvector
   embedding_str = str(query_emb)
   
   try:
@@ -48,14 +44,13 @@ async def get_rag_context(query_emb: list, top_k: int = 2):
   if not turn_ids:
     return []
       
-  # Fetch both user and assistant messages for these turns
   tids_str = ",".join(map(str, turn_ids))
   sql_msgs = f"""
     SELECT role, content, turn_id
     FROM rag_messages
     WHERE turn_id IN ({tids_str})
     ORDER BY turn_id, id
-  """
+    """
   
   rag_rows = await database.fetch_all(query=sql_msgs)
   
@@ -68,7 +63,6 @@ async def get_rag_context(query_emb: list, top_k: int = 2):
   rag_context = []
   for tid in turn_ids:
     msgs = msgs_by_turn.get(tid, [])
-    # Ensure User comes before Assistant
     u = next((m for m in msgs if m["role"] == "user"), None)
     a = next((m for m in msgs if m["role"] == "assistant"), None)
     
@@ -83,13 +77,10 @@ async def get_rag_context(query_emb: list, top_k: int = 2):
 async def get_relevant_messages(conversation_id: int, query: str, top_k=2):
   from app.db.crud import get_messages
   
-  # 1. Get embedding for the query
   q_emb = await embed_text(query)
   
-  # 2. Get RAG context (similar past conversations from dataset)
   rag_context = await get_rag_context(q_emb, top_k=top_k)
   
-  # 3. Get relevant history from current conversation
   all_msgs = await get_messages(conversation_id)
 
   if not all_msgs:
@@ -97,7 +88,7 @@ async def get_relevant_messages(conversation_id: int, query: str, top_k=2):
 
   all_msgs = sorted(all_msgs, key=lambda m: (m["timestamp"], m["id"]))
 
-  turns = dict()  # turn_id -> {"user": msg dict, "assistant": msg dict}
+  turns = dict()
   for m in all_msgs:
     if m["turn_id"] is None:
       continue
@@ -107,7 +98,7 @@ async def get_relevant_messages(conversation_id: int, query: str, top_k=2):
     if m["role"] == "user":
       bucket["ts"] = (m["timestamp"], m["id"])
 
-  # recent turn ids
+  # always include most recent turn
   recent_turn_ids = []
   if turns:
     last_turn_id = max(turns.keys(), key=lambda tid: turns[tid]["ts"] if turns[tid]["ts"] else (0, 0))
@@ -152,9 +143,7 @@ async def get_relevant_messages(conversation_id: int, query: str, top_k=2):
     if a:
       history_context.append({"role": "assistant", "content": a["content"], "source": "history"})
 
-  # Mark RAG context source
   for msg in rag_context:
       msg["source"] = "rag"
 
-  # Combine: RAG context first, then history
   return rag_context + history_context

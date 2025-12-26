@@ -5,13 +5,13 @@ async def test_generate_response():
     """Test the generate_response function with sample inputs"""
     
     test_cases = [
-        # {
-        #     "input": "Are you good at responding to mental health questions?",
-        #     "description": "Competence"
-        # },
+        {
+            "input": "The dull weather is making my mood worse",
+            "description": "Mental health support I"
+        },
         {
             "input": "I have been feeling stressed lately at work.",
-            "description": "Mental health support"
+            "description": "Mental health support II"
         },
         
     ]

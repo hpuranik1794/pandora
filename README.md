@@ -133,7 +133,8 @@ Next steps:
   ✅ SaaS like   
   ✅ login/signup  
   ✅ tightly knit UI workflow  
-⚙️ code cleanup  
+✅ code cleanup
+⚙️ update README  
 
 Findings
 - Embedding creation and retrievals are quick

@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY pyproject.toml ./
 COPY uv.lock ./
-RUN uv sync --locked
+RUN uv sync
 RUN uv pip install torch --index-url https://download.pytorch.org/whl/cpu
 
 EXPOSE 8000
