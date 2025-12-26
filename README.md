@@ -1,16 +1,16 @@
 # Pandora
 
-Pandora is a compassionate, privacy-focused AI companion designed to listen, understand and support mental well-being journey. It provides a safe space for users to express themselves, featuring robust encryption for data at rest and a context-aware chat interface.
+Pandora is a compassionate, privacy-focused AI companion designed to listen, understand and support your mental well-being journey. It provides a safe space for users to express themselves, featuring robust encryption for data at rest and a context-aware chat interface.
 
 ![Pandora UI](assets/pandora-landing.png)
 
-## ✨ Features
+## Features
 
 *   **🛡️ Privacy-First Architecture**: All conversation data is encrypted at rest using **Fernet** (AES-128).
 *   **🧠 Context-Aware AI**: Powered by **RAG** and conversation history, Pandora remembers past interactions to provide meaningful, personalized support.
 *   **🔐 Secure Authentication**: Robust user management system using **Argon2** and **JWT** for session management.
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 ### Backend
 *   **Framework**: [FastAPI](https://fastapi.tiangolo.com/) (Python 3.10+)
@@ -28,7 +28,7 @@ Pandora is a compassionate, privacy-focused AI companion designed to listen, und
 *   **Framework**: React (Vite)
 *   **Styling**: Tailwind CSS
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 *   **Python** 3.10 or higher
@@ -97,9 +97,9 @@ npm install
 npm run dev
 ```
 
-## 📚 Dataset & Acknowledgements
+## Dataset & Acknowledgements
 
-To improve the quality and empathy of responses, Pandora utilizes the **Mental Health Counseling Conversations** dataset for RAG (Retrieval-Augmented Generation) context.
+To improve the quality and empathy of responses, Pandora utilizes the **Mental Health Counseling Conversations** dataset for RAG context.
 
 *   **Dataset**: [mental_health_counseling_conversations](https://huggingface.co/datasets/Amod/mental_health_counseling_conversations)
 *   **Author**: Amod
