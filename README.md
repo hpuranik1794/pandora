@@ -10,6 +10,53 @@ Pandora is a compassionate, privacy-focused AI companion designed to listen, und
 *   **🧠 Context-Aware AI**: Powered by **RAG** and conversation history, Pandora remembers past interactions to provide meaningful, personalized support.
 *   **🔐 Secure Authentication**: Robust user management system using **Argon2** and **JWT** for session management.
 
+## Architecture
+
+```mermaid
+graph TB
+    User(("User"))
+
+    subgraph Client["Browser"]
+        SPA["React SPA<br/>JWT in httpOnly secure cookie"]
+    end
+
+    subgraph EdgeBox["nginx — frontend container"]
+        Nginx["Reverse proxy<br/>serves SPA + routes /api/*"]
+    end
+
+    subgraph BackendBox["FastAPI backend"]
+        AuthSvc["auth.py<br/>argon2 hashing + JWT (HS256, 30 min)"]
+        ChatAPI["chat.py<br/>/chat/message, /chat/conversations"]
+        SecuritySvc["security.py<br/>Fernet encrypt / decrypt"]
+        EmbedSvc["embedding.py<br/>Qwen3-Embedding-0.6B (runs locally)"]
+        LLMSvc["llm.py"]
+    end
+
+    subgraph DataBox["PostgreSQL + pgvector"]
+        UsersT[("users")]
+        ConvoT[("conversations<br/>owned by user_id")]
+        MsgT[("messages<br/>content + embedding encrypted")]
+        RagT[("rag_messages<br/>public dataset<br/>+ pgvector ANN search")]
+    end
+
+    Ollama[["Ollama Cloud API<br/>gemma3:12b-cloud"]]
+
+    User --> SPA
+    SPA -->|HTTPS| Nginx
+    Nginx -->|HTTPS| ChatAPI
+    Nginx --> AuthSvc
+    ChatAPI --> SecuritySvc
+    ChatAPI --> EmbedSvc
+    ChatAPI --> LLMSvc
+    AuthSvc --> UsersT
+    ChatAPI --> ConvoT
+    SecuritySvc -->|"encrypt / decrypt"| MsgT
+    EmbedSvc -->|"cosine similarity,<br/>this conversation"| MsgT
+    EmbedSvc -->|"pgvector search"| RagT
+    LLMSvc -->|"message text"| Ollama
+```
+
+
 ## Tech Stack
 
 ### Backend
