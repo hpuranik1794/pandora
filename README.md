@@ -36,7 +36,7 @@ graph TB
         UsersT[("users")]
         ConvoT[("conversations<br/>owned by user_id")]
         MsgT[("messages<br/>content + embedding encrypted")]
-        RagT[("rag_messages<br/>public dataset<br/>+ pgvector ANN search")]
+        RagT[("rag_messages<br/>public dataset<br/>+ pgvector search")]
     end
 
     Ollama[["Ollama Cloud API<br/>gemma3:12b-cloud"]]
